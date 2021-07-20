@@ -14,3 +14,16 @@ def prediction (test):
     prediction = model.predict(df)
     df['Prediction'] = prediction
     return df
+
+def recommodation(churning):
+    proba = rf.predict_proba(churning)[0][1]*100
+    fac = 1
+    while proba < 50:
+      fac += 0.01
+      X_temp = churning
+      X_temp.Total_Trans_Ct = X_temp.Total_Trans_Ct*fac
+      X_temp.Total_Trans_Amt = X_temp.Total_Trans_Amt*fac
+      proba = rf.predict_proba(X_temp)[0][1]*100
+      state = rf.predict(X_temp)[0]
+    change = (fac-1)*100
+    return change, proba, state
