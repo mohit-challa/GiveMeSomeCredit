@@ -19,15 +19,21 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 import joblib
 
-categorical_columns = ['Gender', 'Marital_Status']
+#List of columns for encoding
 
-ordinal_columns = ['Education_Level', 'Card_Category', 'Income_Category']
+#Removed after feature importance: categorical_columns = ['Gender','Marital_Status']
+
+ordinal_columns = ['Education_Level', 'Income_Category']
+#Removed after feature importance:'Card_Category'
 
 numerical_columns = ['Customer_Age', 'Dependent_count', 'Months_on_book', 'Total_Relationship_Count',
                      'Months_Inactive_12_mon','Contacts_Count_12_mon','Credit_Limit','Total_Revolving_Bal',
                     'Total_Amt_Chng_Q4_Q1','Total_Trans_Amt','Total_Trans_Ct','Total_Ct_Chng_Q4_Q1',
                     'Avg_Utilization_Ratio']
-card_category = ['Blue', 'Silver', 'Gold', 'Platinum']
+
+#Column categories for ordinal encoding
+
+#Removed after feature importance: card_category = ['Blue', 'Silver', 'Gold', 'Platinum']
 education_category = ['Uneducated', 'High School', 'College', 'Unknown', 'Graduate', 'Post-Graduate', 'Doctorate']
 income_category = ['Less than $40K', '$40K - $60K', 'Unknown','$60K - $80K', '$80K - $120K', '$120K +']
 def get_data_using_pandas():
@@ -45,17 +51,16 @@ def holdout(df):
     return X_train, X_test, y_train, y_test
 
 def save_pipeline(X_train,y_train):
-    preprocessing = ColumnTransformer(
-    [('cat', OneHotEncoder(handle_unknown='ignore'), categorical_columns),
-     ('ord', OrdinalEncoder(categories=[education_category, card_category, income_category]), ordinal_columns),
-     ('num', StandardScaler(), numerical_columns)])
+    preprocessing = ColumnTransformer([
+    ('ord', OrdinalEncoder(categories=[education_category, income_category]), ordinal_columns), #Removed after feature importance:
+    ('num', StandardScaler(), numerical_columns)])
     smote = SMOTE(random_state=0)
     rf = imbPipeline([
     ('preprocess', preprocessing),
     ('smote', smote),
-    ('classifier', RandomForestClassifier(criterion='entropy', min_samples_split=2, n_estimators=500, random_state=42))])
+    ('classifier', RandomForestClassifier(criterion='entropy', min_samples_split=2, n_estimators=500, random_state=0))])
     rf.fit(X_train, y_train)
-    joblib.dump(rf, 'credit_rf.joblib')
+    joblib.dump(rf, 'credit_new_model.joblib')
 
 if __name__  == "__main__":
     df = get_data_using_pandas()
