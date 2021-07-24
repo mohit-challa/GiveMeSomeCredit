@@ -48,34 +48,43 @@ def main():
      # Added if statement for improving UI (The customer will (0 churn) (1 not churn)) Mirko
     if st.button("Predict"):
         result_input = prediction_input(input_list,model)
-        if result_input['Prediction'] == 0:
-            st.success('The Customer will churn')
+        if result_input['Prediction'].values == 0:
+            st.error('The Customer will churn')
         else:
             st.success('The Customer will not churn')
-        
-        X = result_input[column_name]
-        y = result_input['Prediction']
 
+        X = result_input[result_input.Prediction == 0 ][column_name]
+        y = result_input['Prediction']
         #if y.values == 0:
         change, proba, state = recommendation(X,model)
-        st.write('The recommendation is {},{},{}'.format(change, proba, state))
+        st.write(
+            "**To prevent the churn, please consider the below actions:**\n""\n"
+            "I don't know what is this: {}\n""\n"
+            "I don't know what is this: {}\n""\n"
+            .format(change, proba))
 
-
-
-
-    #dropdown = st.selectbox('How would you like to be contacted?',('Email', 'Home phone', 'Mobile phone'))
-
-
-
-    uploaded_files = st.file_uploader('Choose a CSV file', accept_multiple_files=True)
-
-    # the below line ensures that when the button called 'Predict' is clicked,
-    # the prediction function defined above is called to make the prediction
-    # and store it in the variable result
+    uploaded_file = st.file_uploader('Choose a CSV file')
+    print (uploaded_file)
     if st.button("Predict using CSV file"):
-        result = prediction(uploaded_files)
-        print(result[result.Prediction == 0 ])
-        st.success('The output is {}'.format(result.Prediction))
+      if uploaded_file is not None:
+        result = prediction(uploaded_file,model)
+        n = (result['Prediction'].values == 0).sum()
+        if n > 0:
+          st.error(f'{n} customer(s) will churn')
+        else:
+          st.success('The Customer will not churn')
 
+        st.dataframe(result[result.Prediction == 0 ])
+        X = result[result.Prediction == 0 ][column_name]
+        y = result['Prediction']
+        print(X)
+        for i in range(X.shape[0]) :
+            change, proba, state = recommendation(X.iloc[i],model)
+            st.write(
+              "**To prevent the churn, please consider the below actions:**\n""\n"
+              "I don't know what is this: {}\n""\n"
+              "I don't know what is this: {}\n""\n"
+              .format(change, proba))
+        #st.success('The output is {}'.format(result.Prediction))
 if __name__=='__main__':
     main()
