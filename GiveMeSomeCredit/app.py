@@ -31,7 +31,9 @@ def main():
     Marital_Status = ''
     Card_Category = ''
 
-
+    column_name = ['Customer_Age','Gender','Dependent_count','Education_Level','Marital_Status','Income_Category','Card_Category','Months_on_book','Total_Relationship_Count',
+    'Months_Inactive_12_mon','Contacts_Count_12_mon','Credit_Limit','Total_Revolving_Bal','Total_Amt_Chng_Q4_Q1','Total_Trans_Amt',
+    'Total_Trans_Ct','Total_Ct_Chng_Q4_Q1','Avg_Utilization_Ratio']
 
 
 
@@ -39,22 +41,24 @@ def main():
     Months_Inactive_12_mon,Contacts_Count_12_mon,Credit_Limit,Total_Revolving_Bal,Total_Amt_Chng_Q4_Q1,Total_Trans_Amt,
     Total_Trans_Ct,Total_Ct_Chng_Q4_Q1,Avg_Utilization_Ratio]]
 
+
+    model = joblib.load('credit_new_model.joblib')
+
      # and store it in the variable result
      # Added if statement for improving UI (The customer will (0 churn) (1 not churn)) Mirko
     if st.button("Predict"):
-        result_input = prediction_input(input_list)
-        if result_input == 0:
-            result_input = 'churn'
+        result_input = prediction_input(input_list,model)
+        if result_input['Prediction'] == 0:
+            st.success('The Customer will churn')
         else:
-            result_input = 'not churn'
-        st.success('The Customer will {}'.format(result_input))
-    #Fixed the word "recommendation" Mirko    
-        if result_input == 0:
-            if  st.button("Recommendation"):
-                change, proba, state = recommodation(result_input)
-                st.success('The recommendation is {}'.format(change, proba, state))
+            st.success('The Customer will not churn')
+        
+        X = result_input[column_name]
+        y = result_input['Prediction']
 
-
+        #if y.values == 0:
+        change, proba, state = recommendation(X,model)
+        st.write('The recommendation is {},{},{}'.format(change, proba, state))
 
 
 
