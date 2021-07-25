@@ -59,9 +59,9 @@ def main():
         change, proba, state = recommendation(X,model)
         st.write(
             "**To prevent the churn, please consider the below actions:**\n""\n"
-            "I don't know what is this: {}\n""\n"
-            "I don't know what is this: {}\n""\n"
-            .format(change, proba))
+            "Encourage the customer to increase Total_Transaction_Amount and Total_Transaction_Count by: {}\n"" %\n"
+            "\nThe new probability of a customer not churning is: {}\n"" %\n"
+            .format(round(change,2), round(proba,2)))
 
     uploaded_file = st.file_uploader('Choose a CSV file')
     print (uploaded_file)
@@ -79,12 +79,13 @@ def main():
         y = result['Prediction']
         print(X)
         for i in range(X.shape[0]) :
-            change, proba, state = recommendation(X.iloc[i],model)
+            change, proba, state = recommendation(X.iloc[[i]],model)
             st.write(
               "**To prevent the churn, please consider the below actions:**\n""\n"
-              "I don't know what is this: {}\n""\n"
-              "I don't know what is this: {}\n""\n"
-              .format(change, proba))
+              "Encourage the customer to increase Total_Transaction_Amount and Total_Transaction_Count by: {}\n""\n"
+              "The new probability of a customer not churning is: {}\n""\n %\n"
+              "*************************************************************"
+              .format(round(change,2), round(proba,2)))
         #st.success('The output is {}'.format(result.Prediction))
 if __name__=='__main__':
     main()
