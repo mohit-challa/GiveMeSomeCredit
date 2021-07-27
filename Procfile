@@ -1,1 +1,1 @@
-web: pip install . -U && GiveMeSomeCredit-run
+web: streamlit run GiveMeSomeCredit/app.py --browser.serverPort $PORT

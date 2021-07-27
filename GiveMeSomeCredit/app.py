@@ -42,7 +42,7 @@ def main():
     Total_Trans_Ct,Total_Ct_Chng_Q4_Q1,Avg_Utilization_Ratio]]
 
 
-    model = joblib.load('credit_new_model.joblib')
+    model = joblib.load('GiveMeSomeCredit/credit_new_model.joblib')
 
      # and store it in the variable result
      # Added if statement for improving UI (The customer will (0 churn) (1 not churn)) Mirko
