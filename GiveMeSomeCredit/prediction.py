@@ -35,13 +35,13 @@ def recommendation(churning,model):
     proba = model.predict_proba(churning)[0][1]*100
     fac = 1
     state = 0
+    # state: 0 = Customer will churn; 1 = Customer will not churn.
     while state == 0:
       fac += 0.1
       X_temp = churning.copy()
-      #print(type(X_temp.Total_Trans_Ct.values[0]))
       X_temp.Total_Trans_Ct = X_temp.Total_Trans_Ct.values[0]*fac
       X_temp.Total_Trans_Amt = X_temp.Total_Trans_Amt.values[0]*fac
       proba = model.predict_proba(X_temp)[0][1]*100
       state = model.predict(X_temp)[0]
-    change = (fac)*100
+    change = (fac-1)
     return change, proba, state
