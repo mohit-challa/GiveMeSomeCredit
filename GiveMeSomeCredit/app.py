@@ -23,7 +23,7 @@ def main():
     Marital_Status = ''
     Card_Category = ''
     result_input = pd.DataFrame()
-    model = joblib.load('credit_new_model.joblib')
+    model = joblib.load('GiveMeSomeCredit/credit_new_model.joblib')
     with col1:
         Customer_Age = st.number_input('Age', min_value=1, max_value=150, value=62, step=1)
         Dependent_count= st.selectbox('Number of dependents',(0,1,2,3,4,5,6,7,8,9))
