@@ -83,8 +83,6 @@ def main():
         st.write("")
     with col4:
         st.write("")
-        st.write("")
-        st.write("")
         Total_Revolving_Bal= st.number_input('Total revolving balance on the Credit Card', min_value=1, max_value=100000, value=1438, step=1)
         Total_Amt_Chng_Q4_Q1= st.number_input('Change in transaction amount (Q4 over Q1)', min_value=0, max_value=100000, value=0, step=1)
         Total_Ct_Chng_Q4_Q1= st.number_input('Change in transaction count (Q4 over Q1)', min_value=0, max_value=100000, value=0, step=1)
@@ -121,9 +119,15 @@ def main():
         if not result_input.empty:
             #result_input = prediction_input(input_list,model)
             if result_input['Prediction'].values == 0:
+<<<<<<< HEAD
                 st.error('The customer will churn. Recommendations to prevent churning will be displayed below:')
             else:
                 st.success('The customer will not churn.')
+=======
+                st.error(' ⛔️ The Customer will churn. Recommendations to prevent churning are below:')
+            else:
+                st.success('✅ The Customer will not churn.')
+>>>>>>> 5518fd3de116b3b5b954f93643fa442901f589bf
 
             X = result_input[result_input.Prediction == 0 ][column_name]
             y = result_input['Prediction']
