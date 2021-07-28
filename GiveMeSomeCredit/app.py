@@ -75,9 +75,9 @@ def main():
         if not result_input.empty:
             #result_input = prediction_input(input_list,model)
             if result_input['Prediction'].values == 0:
-                st.error('The Customer will churn. Recommendations to prevent churning are below:')
+                st.error('The customer will churn. Recommendations to prevent churning will be displayed below:')
             else:
-                st.success('The Customer will not churn.')
+                st.success('The customer will not churn.')
 
             X = result_input[result_input.Prediction == 0 ][column_name]
             y = result_input['Prediction']
@@ -85,8 +85,8 @@ def main():
                 change, proba, state = recommendation(X,model)
                 st.info(
                     "**To prevent the churn, please consider the below actions:**\n""\n"
-                    "Encourage the customer to increase Total_Transaction_Amount and Total_Transaction_Count by: {}\n""X\n"
-                    "\nThe new probability of a customer not churning is: {}\n"" %\n"
+                    "Encourage the customer to increase _Total transaction amount_ and _Total transaction count_ by: **{}\n""X**.\n"
+                    "\nThe new probability of a customer not churning is: **{}\n"" %**.\n"
                     .format(round(change,2), round(proba,2)))
 
     st.markdown("""<br>""", unsafe_allow_html=True)
@@ -101,7 +101,7 @@ def main():
                 result = prediction(uploaded_file,model)
                 n = (result['Prediction'].values == 0).sum()
                 if n > 0:
-                    st.error(f'{n} customer(s) will churn')
+                    st.error(f'**{n}** customer(s) will churn. Recommendations to prevent churning per customer will be displayed below:')
                     #st.dataframe(result[result.Prediction == 0 ])
                     X = result[result.Prediction == 0 ][column_name]
                     y = result['Prediction']
@@ -110,11 +110,11 @@ def main():
                         st.dataframe(X.iloc[[i]])
                         st.info(
                             "**To prevent the churn of this customer, please consider the below actions:**\n""\n"
-                            "Encourage the customer to increase Total_Transaction_Amount and Total_Transaction_Count by: {}\n%\n""\n"
-                            "The new probability of a customer not churning is: {}\n%\n"
+                            "Encourage the customer to increase _Total transaction amount_ and _Total transaction count_ by: **{}\nX**.\n""\n"
+                            "The new probability of a customer not churning is: **{}\n%**.\n"
                             .format(round(change,2), round(proba,2)))
                 else:
-                    st.success('The Customer will not churn')
+                    st.success('The customer will not churn')
 
         #st.success('The output is {}'.format(result.Prediction))
 
