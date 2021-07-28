@@ -4,10 +4,50 @@ import streamlit as st
 import streamlit.components.v1 as components
 def main():
       # giving the webpage a title
+
+    model = joblib.load('credit_new_model.joblib')
+    column_name = ['Customer_Age','Gender','Dependent_count','Education_Level','Marital_Status','Income_Category','Card_Category','Months_on_book','Total_Relationship_Count',
+    'Months_Inactive_12_mon','Contacts_Count_12_mon','Credit_Limit','Total_Revolving_Bal','Total_Amt_Chng_Q4_Q1','Total_Trans_Amt',
+    'Total_Trans_Ct','Total_Ct_Chng_Q4_Q1','Avg_Utilization_Ratio']
     st.set_page_config(page_title="GIVE ME SOME CREDIT", page_icon="", layout="wide")
+    #st.title("Credit card churn prediction")
+    #st.markdown(""" <style>
+        #MainMenu {visibility: hidden;}
+        #footer {visibility: hidden;}
+        #</style> """, unsafe_allow_html=True)
+    st.image('Banner.png')
+    col1, col2, col3 = st.beta_columns([2,7,2])
+    with col2:
+        st.subheader("_Please upload a CSV file to get prediction for multiple customers._")
+        uploaded_file = st.file_uploader('')
+        if st.button("Predict using CSV file"):
+            if uploaded_file is not None:
+                result = prediction(uploaded_file,model)
+                n = (result['Prediction'].values == 0).sum()
+                if n > 0:
+                    st.error(f'{n} customer(s) will churn')
+                    #st.dataframe(result[result.Prediction == 0 ])
+                    X = result[result.Prediction == 0 ][column_name]
+                    y = result['Prediction']
+                    for i in range(X.shape[0]) :
+                        change, proba, state = recommendation(X.iloc[[i]],model)
+                        st.dataframe(X.iloc[[i]])
+                        st.info(
+                            "**To prevent the churn of this customer, please consider the below actions:**\n""\n"
+                            "Encourage the customer to increase Total_Transaction_Amount and Total_Transaction_Count by: {}\n%\n""\n"
+                            "The new probability of a customer not churning is: {}\n%\n"
+                            .format(round(change,2), round(proba,2)))
+                else:
+                    st.success('The Customer will not churn')
+    
+   
+    st.subheader("_Please fill the fields below with the Customer's information_")
+    # the following lines create text boxes in which the user can enter
+    # the data required to make the prediction
+    
     #st.title("GIVE ME SOME CREDIT") Added the markdown line below as st.title does not allow center-alignment
-    st.markdown("<h1 style='text-align: center; color: white;'>GIVE ME SOME CREDIT</h1>", unsafe_allow_html=True)
-    st.markdown("""<br>""", unsafe_allow_html=True)
+    #st.markdown("<h1 style='text-align: center; color: white;'>GIVE ME SOME CREDIT</h1>", unsafe_allow_html=True)
+    #st.markdown("""<br>""", unsafe_allow_html=True)
     
     # The following lines create text boxes in which the user can enter
     # The data required to make the prediction:
@@ -22,9 +62,9 @@ def main():
     #Set a default value for least important feature 'Education_Level' to make the UI look beter.
     Education_Level = 'Unknown'
     result_input = pd.DataFrame()
-    model = joblib.load('GiveMeSomeCredit/credit_new_model.joblib')
     
     col1,col2,col3,col4,col5 = st.beta_columns([2,3,1,3,2])
+
     with col1:
         st.write("")
     with col2:
@@ -63,9 +103,14 @@ def main():
             result_input = prediction_input(input_list,model)
 
 
-    column_name = ['Customer_Age','Gender','Dependent_count','Education_Level','Marital_Status','Income_Category','Card_Category','Months_on_book','Total_Relationship_Count',
-    'Months_Inactive_12_mon','Contacts_Count_12_mon','Credit_Limit','Total_Revolving_Bal','Total_Amt_Chng_Q4_Q1','Total_Trans_Amt',
-    'Total_Trans_Ct','Total_Ct_Chng_Q4_Q1','Avg_Utilization_Ratio']
+     # and store it in the variable result
+     # Added if statement for improving UI (The customer will (0 churn) (1 not churn)) Mirko
+  
+
+
+   # column_name = ['Customer_Age','Gender','Dependent_count','Education_Level','Marital_Status','Income_Category','Card_Category','Months_on_book','Total_Relationship_Count',
+    #'Months_Inactive_12_mon','Contacts_Count_12_mon','Credit_Limit','Total_Revolving_Bal','Total_Amt_Chng_Q4_Q1','Total_Trans_Amt',
+    #'Total_Trans_Ct','Total_Ct_Chng_Q4_Q1','Avg_Utilization_Ratio']
 
      # Store it in the variable "result".
      # 0 = Customer will churn; 1 = Customer will not churn.
@@ -91,30 +136,6 @@ def main():
 
     st.markdown("""<br>""", unsafe_allow_html=True)
     
-    col1, col2, col3 = st.beta_columns([2,7,2])
-    with col2:
-        st.write("_Please upload a CSV file to get prediction for multiple customers._")
-        uploaded_file = st.file_uploader('Upload a CSV:')
-        print (uploaded_file)
-        if st.button("Predict using CSV file"):
-            if uploaded_file is not None:
-                result = prediction(uploaded_file,model)
-                n = (result['Prediction'].values == 0).sum()
-                if n > 0:
-                    st.error(f'{n} customer(s) will churn')
-                    #st.dataframe(result[result.Prediction == 0 ])
-                    X = result[result.Prediction == 0 ][column_name]
-                    y = result['Prediction']
-                    for i in range(X.shape[0]) :
-                        change, proba, state = recommendation(X.iloc[[i]],model)
-                        st.dataframe(X.iloc[[i]])
-                        st.info(
-                            "**To prevent the churn of this customer, please consider the below actions:**\n""\n"
-                            "Encourage the customer to increase Total_Transaction_Amount and Total_Transaction_Count by: {}\n%\n""\n"
-                            "The new probability of a customer not churning is: {}\n%\n"
-                            .format(round(change,2), round(proba,2)))
-                else:
-                    st.success('The Customer will not churn')
 
         #st.success('The output is {}'.format(result.Prediction))
 
