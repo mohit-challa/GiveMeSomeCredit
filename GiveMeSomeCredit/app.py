@@ -39,16 +39,18 @@ def main():
                             .format(round(change,2), round(proba,2)))
                 else:
                     st.success('The Customer will not churn')
-    
-   
-    st.subheader("_Please fill the fields below with the Customer's information_")
+        st.subheader("_Please enter customer information manually to get prediction._")
+
+
+
+    #st.subheader("_Please fill the fields below with the Customer's information_")
     # the following lines create text boxes in which the user can enter
     # the data required to make the prediction
-    
+
     #st.title("GIVE ME SOME CREDIT") Added the markdown line below as st.title does not allow center-alignment
     #st.markdown("<h1 style='text-align: center; color: white;'>GIVE ME SOME CREDIT</h1>", unsafe_allow_html=True)
     #st.markdown("""<br>""", unsafe_allow_html=True)
-    
+
     # The following lines create text boxes in which the user can enter
     # The data required to make the prediction:
     #['Customer_Age', 'Dependent_count', 'Education_Level', 'Income_Category',
@@ -62,13 +64,12 @@ def main():
     #Set a default value for least important feature 'Education_Level' to make the UI look beter.
     Education_Level = 'Unknown'
     result_input = pd.DataFrame()
-    
+
     col1,col2,col3,col4,col5 = st.beta_columns([2,3,1,3,2])
 
     with col1:
         st.write("")
     with col2:
-        st.write("_Please enter customer information manually to get prediction._")
         st.write("")
         Customer_Age = st.number_input('Age', min_value=1, max_value=150, value=62, step=1)
         Dependent_count= st.selectbox('Number of dependents',(0,1,2,3,4,5,6,7,8,9))
@@ -93,7 +94,7 @@ def main():
         Total_Trans_Amt= st.number_input('Total transaction amount (Last 12 months)', min_value=1, max_value=100000, value=2085, step=1)
     with col5:
         st.write("")
-    
+
     st.markdown("""<br>""", unsafe_allow_html=True)
     col1, col2, col3 = st.beta_columns([6,1,6])
     if col2.button("Predict"):
@@ -105,7 +106,7 @@ def main():
 
      # and store it in the variable result
      # Added if statement for improving UI (The customer will (0 churn) (1 not churn)) Mirko
-  
+
 
 
    # column_name = ['Customer_Age','Gender','Dependent_count','Education_Level','Marital_Status','Income_Category','Card_Category','Months_on_book','Total_Relationship_Count',
@@ -135,7 +136,7 @@ def main():
                     .format(round(change,2), round(proba,2)))
 
     st.markdown("""<br>""", unsafe_allow_html=True)
-    
+
 
         #st.success('The output is {}'.format(result.Prediction))
 
