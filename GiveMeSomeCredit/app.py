@@ -3,19 +3,22 @@ from prediction import *
 import streamlit as st
 import streamlit.components.v1 as components
 def main():
-      # giving the webpage a title
-
+    
+    # Loading the model
     model = joblib.load('GiveMeSomeCredit/credit_new_model.joblib')
     column_name = ['Customer_Age','Gender','Dependent_count','Education_Level','Marital_Status','Income_Category','Card_Category','Months_on_book','Total_Relationship_Count',
     'Months_Inactive_12_mon','Contacts_Count_12_mon','Credit_Limit','Total_Revolving_Bal','Total_Amt_Chng_Q4_Q1','Total_Trans_Amt',
     'Total_Trans_Ct','Total_Ct_Chng_Q4_Q1','Avg_Utilization_Ratio']
+    
+    # Page Config
     st.set_page_config(page_title="GIVE ME SOME CREDIT", page_icon="", layout="wide")
-    #st.title("Credit card churn prediction")
-    #st.markdown(""" <style>
-        #MainMenu {visibility: hidden;}
-        #footer {visibility: hidden;}
-        #</style> """, unsafe_allow_html=True)
-    st.image('GiveMeSomeCredit/Banner.png')
+    
+    # Top banner
+    col1, col2, col3 = st.beta_columns([2,7,2])
+    with col2:
+        st.image('GiveMeSomeCredit/Banner.png')
+
+    # Uploading CSV
     col1, col2, col3 = st.beta_columns([2,7,2])
     with col2:
         st.subheader("_Please upload a CSV file to get prediction for multiple customers._")
@@ -25,7 +28,7 @@ def main():
                 result = prediction(uploaded_file,model)
                 n = (result['Prediction'].values == 0).sum()
                 if n > 0:
-                    st.error(f'{n} customer(s) will churn')
+                    st.error(f'⛔️ {n} customer(s) will churn.')
                     #st.dataframe(result[result.Prediction == 0 ])
                     X = result[result.Prediction == 0 ][column_name]
                     y = result['Prediction']
@@ -34,30 +37,21 @@ def main():
                         st.dataframe(X.iloc[[i]])
                         st.info(
                             "**To prevent the churn of this customer, please consider the below actions:**\n""\n"
-                            "Encourage the customer to increase Total_Transaction_Amount and Total_Transaction_Count by: {}\n%\n""\n"
-                            "The new probability of a customer not churning is: {}\n%\n"
+                            "Encourage the customer to increase _Total transaction amount_ and _Total transaction count_ by: **{}\nX**.\n""\n"
+                            "The new probability of a customer not churning is: **{}\n%**\n"
                             .format(round(change,2), round(proba,2)))
                 else:
                     st.success('The Customer will not churn')
-        st.subheader("_Please enter customer information manually to get prediction._")
-
-
-
-    #st.subheader("_Please fill the fields below with the Customer's information_")
-    # the following lines create text boxes in which the user can enter
-    # the data required to make the prediction
-
-    #st.title("GIVE ME SOME CREDIT") Added the markdown line below as st.title does not allow center-alignment
-    #st.markdown("<h1 style='text-align: center; color: white;'>GIVE ME SOME CREDIT</h1>", unsafe_allow_html=True)
-    #st.markdown("""<br>""", unsafe_allow_html=True)
-
-    # The following lines create text boxes in which the user can enter
+        st.subheader("_Please enter customer information manually to get the prediction._")
+    
     # The data required to make the prediction:
     #['Customer_Age', 'Dependent_count', 'Education_Level', 'Income_Category',
        #'Months_on_book', 'Total_Relationship_Count', 'Months_Inactive_12_mon',
        #'Contacts_Count_12_mon', 'Credit_Limit', 'Total_Revolving_Bal',
        #'Total_Amt_Chng_Q4_Q1', 'Total_Trans_Amt', 'Total_Trans_Ct',
        #'Total_Ct_Chng_Q4_Q1', 'Avg_Utilization_Ratio']
+    
+    # Following variables need to be passed, stored empty
     Gender = ''
     Marital_Status = ''
     Card_Category = ''
@@ -65,8 +59,8 @@ def main():
     Education_Level = 'Unknown'
     result_input = pd.DataFrame()
 
+    # Taking user inputs for manual prediction
     col1,col2,col3,col4,col5 = st.beta_columns([2,3,1,3,2])
-
     with col1:
         st.write("")
     with col2:
@@ -129,8 +123,8 @@ def main():
                 change, proba, state = recommendation(X,model)
                 st.info(
                     "**To prevent the churn, please consider the below actions:**\n""\n"
-                    "Encourage the customer to increase _Total transaction amount_ and _Total transaction count_ by: **{}\n""X**.\n"
-                    "\nThe new probability of a customer not churning is: **{}\n"" %**.\n"
+                    "Encourage the customer to increase _Total transaction amount_ and _Total transaction count_ by: **{}\nX**.\n""\n"
+                            "The new probability of a customer not churning is: **{}\n%**\n"
                     .format(round(change,2), round(proba,2)))
 
     st.markdown("""<br>""", unsafe_allow_html=True)
