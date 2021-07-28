@@ -5,7 +5,7 @@ import streamlit.components.v1 as components
 def main():
       # giving the webpage a title
 
-    model = joblib.load('credit_new_model.joblib')
+    model = joblib.load('GiveMeSomeCredit/credit_new_model.joblib')
     column_name = ['Customer_Age','Gender','Dependent_count','Education_Level','Marital_Status','Income_Category','Card_Category','Months_on_book','Total_Relationship_Count',
     'Months_Inactive_12_mon','Contacts_Count_12_mon','Credit_Limit','Total_Revolving_Bal','Total_Amt_Chng_Q4_Q1','Total_Trans_Amt',
     'Total_Trans_Ct','Total_Ct_Chng_Q4_Q1','Avg_Utilization_Ratio']
@@ -15,7 +15,7 @@ def main():
         #MainMenu {visibility: hidden;}
         #footer {visibility: hidden;}
         #</style> """, unsafe_allow_html=True)
-    st.image('Banner.png')
+    st.image('GiveMeSomeCredit/Banner.png')
     col1, col2, col3 = st.beta_columns([2,7,2])
     with col2:
         st.subheader("_Please upload a CSV file to get prediction for multiple customers._")
@@ -119,15 +119,9 @@ def main():
         if not result_input.empty:
             #result_input = prediction_input(input_list,model)
             if result_input['Prediction'].values == 0:
-<<<<<<< HEAD
-                st.error('The customer will churn. Recommendations to prevent churning will be displayed below:')
+                st.error('⛔️ The customer will churn. Recommendations to prevent churning are below:')
             else:
-                st.success('The customer will not churn.')
-=======
-                st.error(' ⛔️ The Customer will churn. Recommendations to prevent churning are below:')
-            else:
-                st.success('✅ The Customer will not churn.')
->>>>>>> 5518fd3de116b3b5b954f93643fa442901f589bf
+                st.success('✅ The customer will not churn.')
 
             X = result_input[result_input.Prediction == 0 ][column_name]
             y = result_input['Prediction']
@@ -140,35 +134,6 @@ def main():
                     .format(round(change,2), round(proba,2)))
 
     st.markdown("""<br>""", unsafe_allow_html=True)
-<<<<<<< HEAD
-    
-    col1, col2, col3 = st.beta_columns([2,7,2])
-    with col2:
-        st.write("_Please upload a CSV file to get prediction for multiple customers._")
-        uploaded_file = st.file_uploader('Upload a CSV:')
-        print (uploaded_file)
-        if st.button("Predict using CSV file"):
-            if uploaded_file is not None:
-                result = prediction(uploaded_file,model)
-                n = (result['Prediction'].values == 0).sum()
-                if n > 0:
-                    st.error(f'**{n}** customer(s) will churn. Recommendations to prevent churning per customer will be displayed below:')
-                    #st.dataframe(result[result.Prediction == 0 ])
-                    X = result[result.Prediction == 0 ][column_name]
-                    y = result['Prediction']
-                    for i in range(X.shape[0]) :
-                        change, proba, state = recommendation(X.iloc[[i]],model)
-                        st.dataframe(X.iloc[[i]])
-                        st.info(
-                            "**To prevent the churn of this customer, please consider the below actions:**\n""\n"
-                            "Encourage the customer to increase _Total transaction amount_ and _Total transaction count_ by: **{}\nX**.\n""\n"
-                            "The new probability of a customer not churning is: **{}\n%**.\n"
-                            .format(round(change,2), round(proba,2)))
-                else:
-                    st.success('The customer will not churn')
-=======
-
->>>>>>> dfb20a97661427cf19f159c4270597328792a9e1
 
         #st.success('The output is {}'.format(result.Prediction))
 
