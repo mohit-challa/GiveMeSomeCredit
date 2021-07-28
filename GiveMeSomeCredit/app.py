@@ -9,8 +9,8 @@ def main():
     st.markdown("<h1 style='text-align: center; color: white;'>GIVE ME SOME CREDIT</h1>", unsafe_allow_html=True)
     st.markdown("""<br>""", unsafe_allow_html=True)
     
-    # the following lines create text boxes in which the user can enter
-    # the data required to make the prediction
+    # The following lines create text boxes in which the user can enter
+    # The data required to make the prediction:
     #['Customer_Age', 'Dependent_count', 'Education_Level', 'Income_Category',
        #'Months_on_book', 'Total_Relationship_Count', 'Months_Inactive_12_mon',
        #'Contacts_Count_12_mon', 'Credit_Limit', 'Total_Revolving_Bal',
