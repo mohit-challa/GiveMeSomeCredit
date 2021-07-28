@@ -22,43 +22,26 @@ def prediction_input(input_list,model):
     df = pd.DataFrame(data = input_list, columns= column_name)
     #model = joblib.load('credit_new_model.joblib')
     prediction = model.predict(df)
+    proba = model.predict_proba(df)[0][1]*100
     df['Prediction'] = prediction
+    df['Proba'] = proba
     return df
 
 
 
 def recommendation(churning,model):
+    """Returns a recommended increase in Total_Trans_Amt and Total_Trans_Ct to make the customer not churn."""
     churning = churning.iloc[[0]]
-    print(churning)
     proba = model.predict_proba(churning)[0][1]*100
-    print(proba)
     fac = 1
-    state = 1
-    while proba < 50:
-      fac += 0.01
-      X_temp = churning
+    state = 0
+    while state == 0:
+      fac += 0.1
+      X_temp = churning.copy()
       #print(type(X_temp.Total_Trans_Ct.values[0]))
       X_temp.Total_Trans_Ct = X_temp.Total_Trans_Ct.values[0]*fac
       X_temp.Total_Trans_Amt = X_temp.Total_Trans_Amt.values[0]*fac
       proba = model.predict_proba(X_temp)[0][1]*100
       state = model.predict(X_temp)[0]
-    change = (fac-1)*100
-    return change, proba, state
-
-def recommendation2(churning,model):
-    print(churning)
-    print('This is the proba')
-    print (model.predict_proba([churning]))
-    proba = model.predict_proba(churning)[1]*100
-    fac = 1
-    state = 1
-    while proba < 50:
-      fac += 0.01
-      X_temp = churning
-      print(type(X_temp.Total_Trans_Ct.values[0]))
-      X_temp.Total_Trans_Ct = X_temp.Total_Trans_Ct.values[0]*fac
-      X_temp.Total_Trans_Amt = X_temp.Total_Trans_Amt.values[0]*fac
-      proba = model.predict_proba(X_temp)[1]*100
-      state = model.predict(X_temp)[0]
-    change = (fac-1)*100
+    change = (fac)*100
     return change, proba, state
