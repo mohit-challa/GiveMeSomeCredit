@@ -11,7 +11,7 @@ def main():
     'Total_Trans_Ct','Total_Ct_Chng_Q4_Q1','Avg_Utilization_Ratio']
 
     # Page Config
-    st.set_page_config(page_title="GIVE ME SOME CREDIT", page_icon="", layout="wide")
+    st.set_page_config(page_title="GIVE ME SOME CREDIT", page_icon="💳", layout="wide")
 
     # Top banner
     col1, col2, col3 = st.beta_columns([2,7,2])
