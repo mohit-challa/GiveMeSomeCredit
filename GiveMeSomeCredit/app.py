@@ -28,7 +28,7 @@ def main():
                 result = prediction(uploaded_file,model)
                 n = (result['Prediction'].values == 0).sum()
                 if n > 0:
-                    st.error(f'⛔️ {n} customer(s) will churn.')
+                    st.error(f'⛔️ {n} customer(s) will churn. Recommendations to prevent churning are below:')
                     #st.dataframe(result[result.Prediction == 0 ])
                     X = result[result.Prediction == 0 ][column_name]
                     y = result['Prediction']
